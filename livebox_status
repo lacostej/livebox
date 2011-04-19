@@ -1,0 +1,109 @@
+#!/bin/bash
+#
+# Script to extract status information from a livebox routeur and format it in a single line
+#
+
+# default values
+HOST=192.168.1.1
+SLEEP=10
+LOOPS=1
+
+usage()
+{
+  name=`basename $0`
+  cat << EOF
+usage: $name options
+
+This script displays the adsl statuses for the livebox in a single line
+
+OPTIONS:
+   -h      Show this message
+   -u      Box url. Defaults to $HOST
+   -n      Number of times to display the statuses. Defaults to $LOOPS
+   -s      Time to sleep in between. Defaults to $SLEEP. Only useful for n > 1
+EOF
+
+}
+
+while getopts “hu:n:s:” OPTION
+do
+     case $OPTION in
+         h)
+             usage
+             exit 1
+             ;;
+         u)
+             HOST=$OPTARG
+             ;;
+         n)
+             LOOPS=$OPTARG
+             ;;
+         s)
+             SLEEP=$OPTARG
+             ;;
+
+         ?)
+             usage
+             exit
+             ;;
+     esac
+done
+
+trim() { echo $1; }
+
+# crappy html parsing...
+cell_extract() {
+  local exp="$1"
+  local file="$2"
+  cell=`grep -A 1 "$exp" $file | tail -1 | sed 's/.*>\(.*\)<.*/\1/'`
+  cell=$(trim "$cell")
+}
+
+display_statuses() {
+  local box_url=$HOST
+  local sessionid=`curl -s -d "authlogin=admin&authpasswd=admin&authaction=login" $box_url | grep 'voip&sessionid=' | sed 's/.*id=\([^\"]*\).*/\1/'`
+  local infosys_main="$box_url/index.cgi?page=infosys_main&sessionid=$sessionid"
+  local infosys_adsl="$box_url/index.cgi?page=infosys_adsl&sessionid=$sessionid"
+
+  local log_main=`mktemp /tmp/livebox.XXXXXXXX`
+  local log_adsl=`mktemp /tmp/livebox.XXXXXXXX`
+  curl --silent $infosys_main -o $log_main
+  curl --silent $infosys_adsl -o $log_adsl
+
+  local log=$log_main
+  cell_extract "Atténuation montante" $log && car1=$cell
+  cell_extract "Atténuation descendante" $log && car2=$cell
+  cell_extract "Marge au bruit sens montant" $log && car3=$cell
+  cell_extract "Marge au bruit descendante" $log && car4=$cell
+  cell_extract "Débit montant maximum" $log && car5=$cell
+  cell_extract "Débit descendant maximum" $log && car6=$cell
+  cell_extract "Puissance dans le sens montant" $log && car7=$cell
+  cell_extract "Puissance dans le sens descendant" $log && car8=$cell
+  cell_extract "Nombre de paquets reçus" $log && car9=$cell
+  cell_extract "Nombre de paquets envoyés" $log && car10=$cell
+  cell_extract "Nombre de paquets perdus" $log && car11=$cell
+  cell_extract "Adresse IP WAN" $log && car12=$cell
+  if [ -f $log_main ]; then
+    rm $log_main
+  fi
+  log=$log_adsl
+  cell_extract "Durée de synchronisation ADSL" $log && adsl1=$cell
+  cell_extract "Dernière connexion PPP" $log && adsl2=$cell
+  cell_extract "Durée de connexion PPP" $log && adsl3=$cell
+  cell_extract "Date de dernière déconnexion PPP" $log && adsl4=$cell
+  if [ -f $log_adsl ]; then
+    rm $log_adsl
+  fi
+
+  local now=`date +%Y%m%d-%H%M%S`
+  echo "$now;$car1;$car2;$car3;$car4;$car5;$car6;$car7;$car8;$car9;$car10;$car11;$car12;$adsl1;$adsl2;$adsl3;$adsl4"
+}
+
+
+for i in $(seq 1 1 $LOOPS)
+do
+  display_statuses
+  if [ $i -ne $LOOPS ]; then
+    sleep $SLEEP
+  fi
+done
