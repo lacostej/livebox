@@ -7,6 +7,7 @@
 HOST=192.168.1.1
 SLEEP=10
 LOOPS=1
+PASSWORD=admin
 
 usage()
 {
@@ -20,12 +21,13 @@ OPTIONS:
    -h      Show this message
    -u      Box url. Defaults to $HOST
    -n      Number of times to display the statuses. Defaults to $LOOPS
+   -p      Admin password. Defaults to PASSWORD
    -s      Time to sleep in between. Defaults to $SLEEP. Only useful for n > 1
 EOF
 
 }
 
-while getopts “hu:n:s:” OPTION
+while getopts “hu:n:s:p:” OPTION
 do
      case $OPTION in
          h)
@@ -41,7 +43,9 @@ do
          s)
              SLEEP=$OPTARG
              ;;
-
+         p)
+             PASSWORD=$OPTARG
+             ;;
          ?)
              usage
              exit
@@ -61,7 +65,7 @@ cell_extract() {
 
 display_statuses() {
   local box_url=$HOST
-  local sessionid=`curl -s -d "authlogin=admin&authpasswd=admin&authaction=login" $box_url | grep 'voip&sessionid=' | sed 's/.*id=\([^\"]*\).*/\1/'`
+  local sessionid=`curl -s -d "authlogin=admin&authpasswd=$PASSWORD&authaction=login" $box_url | grep 'voip&sessionid=' | sed 's/.*id=\([^\"]*\).*/\1/'`
   local infosys_main="$box_url/index.cgi?page=infosys_main&sessionid=$sessionid"
   local infosys_adsl="$box_url/index.cgi?page=infosys_adsl&sessionid=$sessionid"
 
