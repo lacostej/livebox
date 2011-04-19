@@ -13,7 +13,7 @@ usage()
 {
   name=`basename $0`
   cat << EOF
-usage: $name options
+usage: $name [options]
 
 This script displays the adsl statuses for the livebox in a single line
 
