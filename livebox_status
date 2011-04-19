@@ -51,7 +51,14 @@ do
              exit
              ;;
      esac
+     shift $((OPTIND-1));
 done
+
+if [ $# -gt 0 ]; then
+  echo "Unecessary remaining arguments: $*"
+  usage
+  exit 
+fi
 
 trim() { echo $1; }
 
