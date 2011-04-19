@@ -1,0 +1,12 @@
+Script to extract information from a livebox 2 web interface.
+
+Usages:
+
+* Command line:
+
+> livebox_status
+
+* Crontab: log 4 times per minute the statuses
+
+* * * * * livebox_status -n 4 -s 15 >> ~/livebox_statuses.txt
+
