@@ -6,6 +6,8 @@ Usages:
 
 > livebox_status
 
+20110419-204454;26.0 dB;47.3 dB;18 dB;10 dB;640 kb/s;3360 kb/s;0;0;301;1991;0;81.49.42.174;00:05:44;mardi 19 avril, 19:41:37;00:03:20;mardi 19 avril, 19:39:14
+
 * Crontab: log 4 times per minute the statuses
 
 * * * * * livebox_status -n 4 -s 15 >> ~/livebox_statuses.txt
