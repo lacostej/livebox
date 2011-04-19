@@ -57,7 +57,7 @@ done
 if [ $# -gt 0 ]; then
   echo "Unecessary remaining arguments: $*"
   usage
-  exit 
+  exit 1
 fi
 
 trim() { echo $1; }
