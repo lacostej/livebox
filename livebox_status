@@ -2,6 +2,29 @@
 #
 # Script to extract status information from a livebox routeur and format it in a single line
 #
+# Line format: TIMESTAMP;MAIN1;MAIN2;MAIN3;....;MAIN12;ADSL1;ADSL2;ADSL3;ADSL4
+#
+# IDX, PAGE, description
+#
+# 1, TIMESTAMP: 20110419-093701
+# 2, MAIN1: "Atténuation montante"
+# 3, MAIN: "Atténuation descendante"
+# 4, MAIN: "Marge au bruit sens montant"
+# 5, MAIN: "Marge au bruit descendante"
+# 6, MAIN: "Débit montant maximum"
+# 7, MAIN: "Débit descendant maximum"
+# 8, MAIN: "Puissance dans le sens montant"
+# 9, MAIN: "Puissance dans le sens descendant"
+# 10, MAIN: "Nombre de paquets reçus"
+# 11, MAIN: "Nombre de paquets envoyés"
+# 12, MAIN: "Nombre de paquets perdus"
+# 13, MAIN: "Adresse IP WAN"
+#
+# 14, ADSL: "Durée de synchronisation ADSL"
+# 15, ADSL: "Dernière connexion PPP"
+# 16, ADSL: "Durée de connexion PPP"
+# 17, ADSL: "Date de dernière déconnexion PPP"
+
 
 # default values
 HOST=192.168.1.1
