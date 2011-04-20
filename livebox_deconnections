@@ -1,0 +1,43 @@
+#!/bin/bash
+#
+# list livebox deconnections date time
+#
+usage() {
+  name=`basename "$0"`
+  cat << EOF
+usage: $name [filename]
+
+This script returns the deconnection times as stored in the log file.
+
+If filename isn't specified, it uses the standard input as input (cat filename | $name)
+EOF
+}
+if [ $# -gt 1 ]; then
+  usage
+  exit 1
+fi
+
+if [ $# -eq 1 ]; then
+  file=$1
+  if [ ! -f $file ]; then
+    echo "File $file doesn't exist"
+    usage
+    exit 1
+  fi
+fi
+cut -d ';' -f 17 $file  | sort -u | awk '
+BEGIN{last = 0; nbdisconnections=0}
+{ 
+  # 
+  hour=strtonum(substr($4, 0, 2))
+  min=strtonum(substr($4, 4, 2))
+  sec=strtonum(substr($4, 7, 2))
+  new=hour*3600+min*60+sec
+  if (new - last > 1) {
+    last = new
+    print
+    nbdisconnections++
+  }
+}
+END { print "Nb disconnections: " nbdisconnections}'
+
