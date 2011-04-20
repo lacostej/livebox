@@ -12,3 +12,4 @@ Usages:
 
 * * * * * livebox_status -n 4 -s 15 >> ~/livebox_statuses.txt
 
+then use gnuplot to generate a graph. Example: bandwidth and noise margin against time.
