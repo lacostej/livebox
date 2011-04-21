@@ -26,38 +26,49 @@ if [ $# -eq 1 ]; then
   fi
 fi
 cut -d ';' -f 15,16,17 $file | awk '
-BEGIN{last_timestamp = 0; nbdisconnections=0; last_start=""}
+BEGIN{ 
+  last_timestamp = 0; nbdisconnections=0; last_disconnect=""
+  print "#Last connection; Last disconnection; duration"
+}
 { 
   if (match($0, /(.*);(.*);(.*)/, a)) {
-    new_start = a[3]
+    new_start=a[1]
     new_duration=a[2]
+    new_disconnect = a[3]
     if (length(new_duration) > 0) {
       last_duration=new_duration
+    } else {
+      #new_start=last_disconnect
     }
-    if (match(new_start, /.*, (.*)/, b)) {
+    if (match(new_disconnect, /.*, (.*)/, b)) {
       since=b[1]
       hour=strtonum(substr(since, 0, 2))
       min=strtonum(substr(since, 4, 2))
       sec=strtonum(substr(since, 7, 2))
       new_timestamp=hour*3600+min*60+sec
-      if (last_start=="") {
-        last_start = new_start
+
+      if (last_disconnect=="") {
+        last_disconnect = new_disconnect
         last_timestamp = new_timestamp
       }
       # detect disconnect, we have a new start timestamp
       # start time is precise up to one second
       if (new_timestamp - last_timestamp > 1) {
         last_timestamp = new_timestamp
-        print "Start: " last_start " Duration: " last_duration
+        from = last_duration == "" ? last_disconnect : new_start
+        to=new_disconnect
+        print from " ; " to " ; " last_duration
+        to=""
         last_duration=""
-        last_start = new_start
+        last_disconnect = new_disconnect
         nbdisconnections++
       }
     }
   }
 }
 END {
-  print "Start: " last_start " Duration: " last_duration
+  from = last_duration == "" ? last_disconnect : new_start
+  print from " ; " to " ; " last_duration
   print "Nb disconnections: " nbdisconnections
 }'
 
