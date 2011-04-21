@@ -26,32 +26,37 @@ if [ $# -eq 1 ]; then
   fi
 fi
 cut -d ';' -f 16,17 $file | awk '
-BEGIN{last_timestamp = 0; nbdisconnections=0; duration_printed=1}
+BEGIN{last_timestamp = 0; nbdisconnections=0; last_start=""}
 { 
   if (match($0, /(.*);(.*)/, a)) {
-    start = a[2]
+    new_start = a[2]
     if (length(a[1]) > 0) {
       last_duration=a[1]
     }
     if (match(a[2], /.*, (.*)/, b)) {
       since=b[1]
-      hour=strtonum(substr(since 0, 2))
+      hour=strtonum(substr(since, 0, 2))
       min=strtonum(substr(since, 4, 2))
       sec=strtonum(substr(since, 7, 2))
       new_timestamp=hour*3600+min*60+sec
-      if (new_timestamp - last_timestamp > 1) { # start time is precise up to one second
+      if (last_start=="") {
+        last_start = new_start
         last_timestamp = new_timestamp
-        if (duration_printed==0 && last_duration!="") {
-          print "Duration: " last_duration
-          duration_printed=1
-          last_duration=""
-        }
-        print "Start: " start
-        duration_printed=0
+      }
+      # detect disconnect, we have a new start timestamp
+      # start time is precise up to one second
+      if (new_timestamp - last_timestamp > 1) {
+        last_timestamp = new_timestamp
+        print "Start: " last_start " Duration: " last_duration
+        last_duration=""
+        last_start = new_start
         nbdisconnections++
       }
     }
   }
 }
-END { print "Nb disconnections: " nbdisconnections}'
+END {
+  print "Start: " last_start " Duration: " last_duration
+  print "Nb disconnections: " nbdisconnections
+}'
 
