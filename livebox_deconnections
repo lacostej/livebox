@@ -25,18 +25,32 @@ if [ $# -eq 1 ]; then
     exit 1
   fi
 fi
-cut -d ';' -f 17 $file  | sort -u | awk '
-BEGIN{last = 0; nbdisconnections=0}
+cut -d ';' -f 16,17 $file | awk '
+BEGIN{last = 0; nbdisconnections=0; duration_printed=1}
 { 
-  # 
-  hour=strtonum(substr($4, 0, 2))
-  min=strtonum(substr($4, 4, 2))
-  sec=strtonum(substr($4, 7, 2))
-  new=hour*3600+min*60+sec
-  if (new - last > 1) {
-    last = new
-    print
-    nbdisconnections++
+  if (match($0, /(.*);(.*)/, a)) {
+    start = a[2]
+    if (length(a[1]) > 0) {
+      last_duration=a[1]
+    }
+    if (match(a[2], /.*, (.*)/, b)) {
+      since=b[1]
+      hour=strtonum(substr(since 0, 2))
+      min=strtonum(substr(since, 4, 2))
+      sec=strtonum(substr(since, 7, 2))
+      new=hour*3600+min*60+sec
+      if (new - last > 1) { # start time is precise up to one second
+        last = new
+        if (duration_printed==0 && last_duration!="") {
+          print "Duration: " last_duration
+          duration_printed=1
+          last_duration=""
+        }
+        print "Start: " start
+        duration_printed=0
+        nbdisconnections++
+      }
+    }
   }
 }
 END { print "Nb disconnections: " nbdisconnections}'
