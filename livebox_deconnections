@@ -27,8 +27,8 @@ if [ $# -eq 1 ]; then
 fi
 cut -d ';' -f 15,16,17 $file | awk '
 BEGIN{ 
-  last_timestamp = 0; nbdisconnections=0; last_disconnect=""
   print "#Last connection; Last disconnection; duration"
+  last_timestamp = 0; nbdisconnections=0; last_disconnect=""
 }
 { 
   if (match($0, /(.*);(.*);(.*)/, a)) {
@@ -37,15 +37,10 @@ BEGIN{
     new_disconnect = a[3]
     if (length(new_duration) > 0) {
       last_duration=new_duration
-    } else {
-      #new_start=last_disconnect
     }
     if (match(new_disconnect, /.*, (.*)/, b)) {
       since=b[1]
-      hour=strtonum(substr(since, 0, 2))
-      min=strtonum(substr(since, 4, 2))
-      sec=strtonum(substr(since, 7, 2))
-      new_timestamp=hour*3600+min*60+sec
+      new_timestamp = strptime(since, hour, min, sec)
 
       if (last_disconnect=="") {
         last_disconnect = new_disconnect
@@ -57,6 +52,7 @@ BEGIN{
         last_timestamp = new_timestamp
         from = last_duration == "" ? last_disconnect : new_start
         to=new_disconnect
+
         print from " ; " to " ; " last_duration
         to=""
         last_duration=""
@@ -69,6 +65,12 @@ BEGIN{
 END {
   from = last_duration == "" ? last_disconnect : new_start
   print from " ; " to " ; " last_duration
-  print "Nb disconnections: " nbdisconnections
-}'
+}
+function strptime(str,    hour,min,sec) {
+  hour=strtonum(substr(str, 0, 2))
+  min=strtonum(substr(str, 4, 2))
+  sec=strtonum(substr(str, 7, 2))
+  return hour*3600+min*60+sec
+}
+'
 
