@@ -27,36 +27,47 @@ if [ $# -eq 1 ]; then
 fi
 awk '
 BEGIN{ 
-  print "#Last connection; Last disconnection; duration"
-  last_timestamp = 0; nbdisconnections=0; last_disconnect=""
+  sep = " ; "
+  print "#Last connection" sep "[Last disconnection]" sep "duration" sep "IP" sep "Bw up" sep "Bw down"
+  last_timestamp = 0; last_disconnect=""; last_ip=""; last_bw1=""; last_bw2=""
 }
 { 
-  if (match($0, /.*;(.*);(.*);(.*)/, a)) {
-    new_start=a[1]
-    new_duration=a[2]
-    new_disconnect = a[3]
+  if (match($0, /(.*);(.*);(.*);(.*)/, a)) {
+    if (match(a[1], /.*;(.*) kb\/s;(.*) kb\/s;.*;(\w+\.\w+\.\w+\.\w+);.*/, b)) {
+      new_bw1=b[1]
+      new_bw2=b[2]
+      new_ip=b[3]
+    }
+    new_start=a[2]
+    new_duration=a[3]
+    new_disconnect = a[4]
     if (length(new_duration) > 0) {
       last_duration=new_duration
     }
     if (match(new_disconnect, /.*, (.*)/, b)) {
-      since=b[1]
-      new_timestamp = strptime(since, hour, min, sec)
+      new_timestamp = strptime(b[1], hour, min, sec)
 
       if (last_disconnect=="") {
         last_disconnect = new_disconnect
         last_timestamp = new_timestamp
+        last_ip = new_ip
+        last_bw1 = new_bw1
+        last_bw2 = new_bw2
       }
       # detect disconnect, we have a new start timestamp
       # start time is precise up to one second
       if (new_timestamp - last_timestamp > 1) {
-        last_timestamp = new_timestamp
         from = last_duration == "" ? last_disconnect : new_start
         to=new_disconnect
 
-        print from " ; " to " ; " last_duration
+        print from sep to sep last_duration sep last_ip sep last_bw1 sep last_bw2
         to=""
+        last_timestamp = new_timestamp
         last_duration=""
         last_disconnect = new_disconnect
+        last_ip = new_ip
+        last_bw1 = new_bw1
+        last_bw2 = new_bw2
         nbdisconnections++
       }
     }
@@ -64,7 +75,7 @@ BEGIN{
 }
 END {
   from = last_duration == "" ? last_disconnect : new_start
-  print from " ; " to " ; " last_duration
+  print from sep to sep last_duration sep last_ip sep last_bw1 sep last_bw2
 }
 function strptime(str,    hour,min,sec) {
   hour=strtonum(substr(str, 0, 2))

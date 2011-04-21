@@ -8,7 +8,7 @@ BEGIN{
   time_without_net=0
 }
 { 
-  if (match($0, /(.*) ; (.*) ; (.*)/, a)) {
+  if (match($0, /(.*) ; (.*) ; (.*) ; .* ; .* ; .*/, a)) {
     new_start=a[1]
     new_stop=a[2]
     new_duration = a[3]

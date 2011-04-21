@@ -1,0 +1,27 @@
+livebox_deconnections livebox_statuses.txt | livebox_offline 
+
+#Last connection ; [Last disconnection] ; duration ; IP ; Bw up ; Bw down
+mardi 19 avril, 08:22:02 ; mardi 19 avril, 09:06:02 ; 00:42:58 ; 86.201.220.177 ; 640 ; 2304
+mardi 19 avril, 09:06:02 ; mardi 19 avril, 09:07:10 ;  ; 86.201.220.177 ; 640 ; 2304
+mardi 19 avril, 09:07:10 ; mardi 19 avril, 09:07:42 ;  ; 86.201.220.177 ; 640 ; 2304
+mardi 19 avril, 09:07:42 ; mardi 19 avril, 09:08:08 ;  ; 86.201.220.177 ; 640 ; 2304
+OFFLINE: FROM mardi 19 avril, 09:06:02 TO mardi 19 avril, 09:08:59 DURATION 00:02:57
+mardi 19 avril, 09:08:59 ; mardi 19 avril, 09:10:08 ; 00:01:02 ; 86.201.220.177 ; 640 ; 2304
+mardi 19 avril, 09:12:54 ; mardi 19 avril, 09:14:37 ; 00:01:39 ; 81.250.4.151 ; 640 ; 3936
+mardi 19 avril, 09:16:26 ; mardi 19 avril, 17:17:23 ; 08:00:53 ; 83.200.182.144 ; 0 ; 0
+mardi 19 avril, 17:17:23 ; mardi 19 avril, 17:17:44 ;  ; 81.250.64.153 ; 0 ; 0
+mardi 19 avril, 17:17:44 ; mardi 19 avril, 17:19:06 ;  ; 81.250.64.153 ; 0 ; 0
+OFFLINE: FROM mardi 19 avril, 17:17:23 TO mardi 19 avril, 17:19:40 DURATION 00:02:17
+mardi 19 avril, 17:19:40 ; mardi 19 avril, 17:19:25 ; 00:00:02 ; 81.250.64.153 ; 0 ; 0
+mardi 19 avril, 17:19:40 ; mardi 19 avril, 18:42:44 ; 01:22:56 ; 81.250.64.153 ; 0 ; 0
+mardi 19 avril, 18:45:22 ; mardi 19 avril, 19:31:05 ; 00:45:30 ; 83.203.32.183 ; 640 ; 3232
+mardi 19 avril, 19:33:03 ; mardi 19 avril, 19:34:26 ; 00:01:17 ; 83.203.37.171 ; 640 ; 3904
+mardi 19 avril, 19:34:26 ; mardi 19 avril, 19:35:19 ;  ; 83.200.177.236 ; 0 ; 0
+mardi 19 avril, 19:35:19 ; mardi 19 avril, 19:35:44 ;  ; 83.200.177.236 ; 0 ; 0
+mardi 19 avril, 19:35:44 ; mardi 19 avril, 19:36:15 ;  ; 83.200.177.236 ; 0 ; 0
+mardi 19 avril, 19:36:15 ; mardi 19 avril, 19:36:36 ;  ; 83.200.177.236 ; 0 ; 0
+OFFLINE: FROM mardi 19 avril, 19:34:26 TO mardi 19 avril, 19:37:16 DURATION 00:02:50
+mardi 19 avril, 19:37:16 ; mardi 19 avril, 19:39:14 ; 00:01:36 ; 83.200.177.236 ; 0 ; 0
+mardi 19 avril, 19:41:38 ;  ; 00:40:19 ; 83.200.243.154 ; 576 ; 1728
+Total time without internet: 00:08:04
+
