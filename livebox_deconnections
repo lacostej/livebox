@@ -25,13 +25,13 @@ if [ $# -eq 1 ]; then
     exit 1
   fi
 fi
-cut -d ';' -f 15,16,17 $file | awk '
+awk '
 BEGIN{ 
   print "#Last connection; Last disconnection; duration"
   last_timestamp = 0; nbdisconnections=0; last_disconnect=""
 }
 { 
-  if (match($0, /(.*);(.*);(.*)/, a)) {
+  if (match($0, /.*;(.*);(.*);(.*)/, a)) {
     new_start=a[1]
     new_duration=a[2]
     new_disconnect = a[3]
@@ -72,5 +72,5 @@ function strptime(str,    hour,min,sec) {
   sec=strtonum(substr(str, 7, 2))
   return hour*3600+min*60+sec
 }
-'
+' $*
 
