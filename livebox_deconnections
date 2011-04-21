@@ -26,7 +26,7 @@ if [ $# -eq 1 ]; then
   fi
 fi
 cut -d ';' -f 16,17 $file | awk '
-BEGIN{last = 0; nbdisconnections=0; duration_printed=1}
+BEGIN{last_timestamp = 0; nbdisconnections=0; duration_printed=1}
 { 
   if (match($0, /(.*);(.*)/, a)) {
     start = a[2]
@@ -38,9 +38,9 @@ BEGIN{last = 0; nbdisconnections=0; duration_printed=1}
       hour=strtonum(substr(since 0, 2))
       min=strtonum(substr(since, 4, 2))
       sec=strtonum(substr(since, 7, 2))
-      new=hour*3600+min*60+sec
-      if (new - last > 1) { # start time is precise up to one second
-        last = new
+      new_timestamp=hour*3600+min*60+sec
+      if (new_timestamp - last_timestamp > 1) { # start time is precise up to one second
+        last_timestamp = new_timestamp
         if (duration_printed==0 && last_duration!="") {
           print "Duration: " last_duration
           duration_printed=1
