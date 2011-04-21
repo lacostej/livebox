@@ -30,10 +30,11 @@ BEGIN{last_timestamp = 0; nbdisconnections=0; last_start=""}
 { 
   if (match($0, /(.*);(.*)/, a)) {
     new_start = a[2]
-    if (length(a[1]) > 0) {
-      last_duration=a[1]
+    new_duration=a[1]
+    if (length(new_duration) > 0) {
+      last_duration=new_duration
     }
-    if (match(a[2], /.*, (.*)/, b)) {
+    if (match(new_start, /.*, (.*)/, b)) {
       since=b[1]
       hour=strtonum(substr(since, 0, 2))
       min=strtonum(substr(since, 4, 2))
