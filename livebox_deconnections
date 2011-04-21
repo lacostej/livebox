@@ -41,6 +41,7 @@ BEGIN{
     new_start=a[2]
     new_duration=a[3]
     new_disconnect = a[4]
+    
     if (length(new_duration) > 0) {
       last_duration=new_duration
     }
@@ -68,7 +69,6 @@ BEGIN{
         last_ip = new_ip
         last_bw1 = new_bw1
         last_bw2 = new_bw2
-        nbdisconnections++
       }
     }
   }
