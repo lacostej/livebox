@@ -25,12 +25,12 @@ if [ $# -eq 1 ]; then
     exit 1
   fi
 fi
-cut -d ';' -f 16,17 $file | awk '
+cut -d ';' -f 15,16,17 $file | awk '
 BEGIN{last_timestamp = 0; nbdisconnections=0; last_start=""}
 { 
-  if (match($0, /(.*);(.*)/, a)) {
-    new_start = a[2]
-    new_duration=a[1]
+  if (match($0, /(.*);(.*);(.*)/, a)) {
+    new_start = a[3]
+    new_duration=a[2]
     if (length(new_duration) > 0) {
       last_duration=new_duration
     }
