@@ -1,4 +1,4 @@
-Script to extract information from a livebox 2 web interface.
+Scripts to extract information from a livebox 2 web interface.
 
 Usages:
 
@@ -28,3 +28,5 @@ then use gnuplot to generate a graph. Example: bandwidth and noise margin agains
  (crontab -e under Windows will look like
  
  * * * * * /cygdrive/c/My\ Documents\livebox\livebox_status -n 3 -s 15 >> /cygdrive/c/My\ Documents\livebox\livebox_statuses.txt 2>&1
+
+* Parsing the output. See livebox_summary and doc/analysis.txt

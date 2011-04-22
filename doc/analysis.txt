@@ -1,4 +1,4 @@
-livebox_deconnections -o livebox_statuses.txt
+livebox_summary -o livebox_statuses.txt
 
 #Last connection ; [Last disconnection] ; duration ; IP ; Bw up ; Bw down
 mardi 19 avril, 08:22:02 ; mardi 19 avril, 09:06:02 ; 00:42:58 ; 86.201.220.177 ; 640 ; 2304
