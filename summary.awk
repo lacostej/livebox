@@ -2,7 +2,7 @@
 BEGIN{ 
   sep = " ; "
   print "#Last connection" sep "[Last disconnection]" sep "duration" sep "IP" sep "Bw up" sep "Bw down"
-  last_timestamp = 0; last_disconnect=""; last_ip=""; last_bw1=""; last_bw2=""
+  lastDisconnectTimestamp = 0; lastDisconnectStr=""; lastIpStr=""; lastBwUpStr=""; lastBwDownStr=""
   
   months[1] = "janvier"
   months[2] = "fevrier"
@@ -21,52 +21,52 @@ BEGIN{
 { 
   if (match($0, /(.*);(.*);(.*);(.*)/, a)) {
     # connection information isn t always present
-    new_ip=""
+    newIpStr=""
     if (match(a[1], /.*;(.*) kb\/s;(.*) kb\/s;.*;(\w+\.\w+\.\w+\.\w+);.*/, b)) {
-      new_bw1=b[1]
-      new_bw2=b[2]
-      new_ip=b[3]
+      newBwUpStr=b[1]
+      newBwDownStr=b[2]
+      newIpStr=b[3]
     }
-    new_connect=a[2]
-    new_duration=a[3]
-    new_disconnect = a[4]
+    newConnectStr=a[2]
+    newDurationStr=a[3]
+    newDisconnectStr = a[4]
     
-    if (new_disconnect != "") {
-      new_timestamp = strptime(new_disconnect)
+    if (newDisconnectStr != "") {
+      newDisconnectTimestamp = strptime(newDisconnectStr)
 
-      if (last_disconnect=="" && new_ip!="") {
-        last_disconnect = new_disconnect
-        last_timestamp = new_timestamp
-        last_ip = new_ip
-        last_bw1 = new_bw1
-        last_bw2 = new_bw2
+      if (lastDisconnectStr=="" && newIpStr!="") {
+        lastDisconnectStr = newDisconnectStr
+        lastDisconnectTimestamp = newDisconnectTimestamp
+        lastIpStr = newIpStr
+        lastBwUpStr = newBwUpStr
+        lastBwDownStr = newBwDownStr
       }
-      #print last_duration " " new_duration " " new_disconnect " " new_timestamp " " last_timestamp
+      #print lastDurationStr " " newDurationStr " " newDisconnectStr " " newDisconnectTimestamp " " lastDisconnectTimestamp
       # detect disconnect, we have a new start timestamp
       # start time is precise up to one second
-      if (new_timestamp - last_timestamp > 1) {
-        from=last_connect
-        to=new_disconnect
+      if (newDisconnectTimestamp - lastDisconnectTimestamp > 1) {
+        from=lastConnectStr
+        to=newDisconnectStr
 
-        print from sep to sep last_duration sep last_ip sep last_bw1 sep last_bw2
+        print from sep to sep lastDurationStr sep lastIpStr sep lastBwUpStr sep lastBwDownStr
         to=""
-        last_timestamp = new_timestamp
-        last_duration=""
-        last_disconnect = new_disconnect
-        last_ip = new_ip
-        last_bw1 = new_bw1
-        last_bw2 = new_bw2
+        lastDisconnectTimestamp = newDisconnectTimestamp
+        lastDurationStr=""
+        lastDisconnectStr = newDisconnectStr
+        lastIpStr = newIpStr
+        lastBwUpStr = newBwUpStr
+        lastBwDownStr = newBwDownStr
       }
     }
-    if (length(new_duration) > 0) {
-      last_duration=new_duration
-      last_connect=new_connect
+    if (length(newDurationStr) > 0) {
+      lastDurationStr=newDurationStr
+      lastConnectStr=newConnectStr
     }
   }
 }
 END {
-  from = last_duration == "" ? last_disconnect : new_connect
-  print from sep to sep last_duration sep last_ip sep last_bw1 sep last_bw2
+  from = lastDurationStr == "" ? lastDisconnectStr : newConnectStr
+  print from sep to sep lastDurationStr sep lastIpStr sep lastBwUpStr sep lastBwDownStr
 }
 function strptime(str,        b, day, month, time, hour, min, sec, year, str2) {
   if (match(str, /.* (.*) (.*), (.*)/, b)) {
