@@ -16,7 +16,8 @@ BEGIN{
   months[10] = "octobre"
   months[11] = "novembre"
   months[12] = "decembre"
-  #print strptime("mardi 19 avril, 09:14:36")
+  print strptime("mardi 19 avril, 09:14:36")
+  print strptime("mardi 19 avril, 09:14:36", 2010)
 }
 { 
   if (match($0, /(.*);(.*);(.*);(.*)/, a)) {
@@ -68,7 +69,13 @@ END {
   from = lastDurationStr == "" ? lastDisconnectStr : newConnectStr
   print from sep to sep lastDurationStr sep lastIpStr sep lastBwUpStr sep lastBwDownStr
 }
-function strptime(str,        b, day, month, time, hour, min, sec, year, str2) {
+function defaultValue(v, d) {
+  return v ? v : d
+}
+# livebox time convert
+# "mardi 19 avril, 09:14:36", [2010]
+function strptime(str,    year,        b, day, month, time, hour, min, sec, str2) {
+  year = defaultValue(year, 1970)
   if (match(str, /.* (.*) (.*), (.*)/, b)) {
     day = b[1]
     month = find_month(b[2])
@@ -76,8 +83,8 @@ function strptime(str,        b, day, month, time, hour, min, sec, year, str2) {
     hour=strtonum(substr(time, 0, 2))
     min=strtonum(substr(time, 4, 2))
     sec=strtonum(substr(time, 7, 2))
-    year=1970
     #YYYY MM DD HH MM SS[ DST]
+    # FIXME not sure if livebox time is daylight savings time compliant.
     str2=sprintf ("%04d %02d %02d %02d %02d %02d" , year, month, day, hour, min, sec)
     return mktime(str2)
   }
