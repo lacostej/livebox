@@ -1,4 +1,4 @@
-#
+# Summarize information from the output of livebox_deconnections
 #
 
 @include livebox.awk
