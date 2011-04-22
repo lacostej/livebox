@@ -4,7 +4,6 @@ BEGIN{
   print "#Last connection" sep "[Last disconnection]" sep "duration" sep "IP" sep "Bw up" sep "Bw down"
   last_timestamp = 0; last_disconnect=""; last_ip=""; last_bw1=""; last_bw2=""
   
-  
   months[1] = "janvier"
   months[2] = "fevrier"
   months[3] = "mars"
@@ -28,7 +27,7 @@ BEGIN{
       new_bw2=b[2]
       new_ip=b[3]
     }
-    new_start=a[2]
+    new_connect=a[2]
     new_duration=a[3]
     new_disconnect = a[4]
     
@@ -46,7 +45,7 @@ BEGIN{
       # detect disconnect, we have a new start timestamp
       # start time is precise up to one second
       if (new_timestamp - last_timestamp > 1) {
-        from=last_start
+        from=last_connect
         to=new_disconnect
 
         print from sep to sep last_duration sep last_ip sep last_bw1 sep last_bw2
@@ -61,12 +60,12 @@ BEGIN{
     }
     if (length(new_duration) > 0) {
       last_duration=new_duration
-      last_start=new_start
+      last_connect=new_connect
     }
   }
 }
 END {
-  from = last_duration == "" ? last_disconnect : new_start
+  from = last_duration == "" ? last_disconnect : new_connect
   print from sep to sep last_duration sep last_ip sep last_bw1 sep last_bw2
 }
 function strptime(str,        b, day, month, time, hour, min, sec, year, str2) {
