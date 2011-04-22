@@ -1,6 +1,0 @@
-#!/bin/bash
-#
-# parse the output of livebox_deconnections to identify real OFFLINE periods and amount of time without internet
-#
-dir=`dirname $0`
-awk -f $dir/offline.awk $*

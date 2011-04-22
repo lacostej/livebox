@@ -1,3 +1,5 @@
+# parse the output of livebox_deconnections to identify real OFFLINE periods and amount of time without internet
+#
 BEGIN{ 
   total_time_without_net=0
   time_without_net=0

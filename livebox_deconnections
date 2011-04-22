@@ -6,13 +6,33 @@ dir=`dirname $0`
 usage() {
   name=`basename "$0"`
   cat << EOF
-usage: $name [filename]
+usage: $name [-o] [filename]
 
 This script returns the deconnection times as stored in the log file.
+
+-o:  also display offline information
 
 If filename isn't specified, it uses the standard input as input (cat filename | $name)
 EOF
 }
+DEBUG=
+while getopts “o” OPTION
+do
+     case $OPTION in
+         o)
+             DEBUG=true
+             ;;
+         ?)
+             usage
+             exit
+             ;;
+     esac
+done
+
+if [ $# -ge $OPTIND ]; then
+  shift $((OPTIND-1))
+fi
+
 if [ $# -gt 1 ]; then
   usage
   exit 1
@@ -26,5 +46,9 @@ if [ $# -eq 1 ]; then
     exit 1
   fi
 fi
-awk -f $dir/summary.awk $*
+if [ -z $DEBUG ]; then
+  awk -f $dir/summary.awk $*
+else
+  awk -f $dir/summary.awk $* | awk -f $dir/offline.awk
+fi
 

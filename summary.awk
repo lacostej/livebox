@@ -16,8 +16,8 @@ BEGIN{
   months[10] = "octobre"
   months[11] = "novembre"
   months[12] = "decembre"
-  print strptime("mardi 19 avril, 09:14:36")
-  print strptime("mardi 19 avril, 09:14:36", 2010)
+  #print strptime("mardi 19 avril, 09:14:36")
+  #print strptime("mardi 19 avril, 09:14:36", 2010)
 }
 { 
   if (match($0, /(.*);(.*);(.*);(.*)/, a)) {
