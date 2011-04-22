@@ -43,9 +43,9 @@ function strptime(str,    hour,min,sec) {
 function timestr(time) {
   return strftime("%H:%M:%S", time - 3600)
 }
-function timestamp(day_and_time) {
+function timestamp(day_and_time,     b) {
   if (match(day_and_time, /.*, (.*)/, b)) {
-    return strptime(b[1], hour, min, sec)
+    return strptime(b[1])
   }
 }
 ' $*

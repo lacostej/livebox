@@ -96,7 +96,7 @@ END {
   from = last_duration == "" ? last_disconnect : new_start
   print from sep to sep last_duration sep last_ip sep last_bw1 sep last_bw2
 }
-function strptime(str) {
+function strptime(str,        b, day, month, time, hour, min, sec, year, str2) {
   if (match(str, /.* (.*) (.*), (.*)/, b)) {
     day = b[1]
     month = find_month(b[2])
@@ -106,8 +106,8 @@ function strptime(str) {
     sec=strtonum(substr(time, 7, 2))
     year=1970
     #YYYY MM DD HH MM SS[ DST]
-    str=sprintf ("%04d %02d %02d %02d %02d %02d" , year, month, day, hour, min, sec)
-    return mktime(str)
+    str2=sprintf ("%04d %02d %02d %02d %02d %02d" , year, month, day, hour, min, sec)
+    return mktime(str2)
   }
 }
 function find_month(month) {
