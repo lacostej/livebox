@@ -47,8 +47,8 @@ if [ $# -eq 1 ]; then
   fi
 fi
 if [ -z $DEBUG ]; then
-  awk -f $dir/summary.awk $*
+  igawk -f $dir/summary.awk $*
 else
-  awk -f $dir/summary.awk $* | awk -f $dir/offline.awk
+  igawk -f $dir/summary.awk $* | igawk -f $dir/offline.awk
 fi
 

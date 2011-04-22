@@ -1,5 +1,7 @@
 # parse the output of livebox_deconnections to identify real OFFLINE periods and amount of time without internet
 #
+@include livebox.awk
+
 BEGIN{ 
   total_time_without_net=0
   time_without_net=0
@@ -15,8 +17,8 @@ BEGIN{
         disconnect=last_stop
     } else {
       if (disconnect != "") {
-        t1 = timestamp(disconnect)
-        t2 = timestamp(new_start)
+        t1 = strptime(disconnect)
+        t2 = strptime(new_start)
         time_without_net = t2 - t1
         total_time_without_net += time_without_net
         print "OFFLINE: FROM " disconnect " TO " new_start " DURATION " timestr(time_without_net)
@@ -30,18 +32,4 @@ BEGIN{
 }
 END {
   print "Total time without internet: " timestr(total_time_without_net)
-}
-function strptime(str,    hour,min,sec) {
-  hour=strtonum(substr(str, 0, 2))
-  min=strtonum(substr(str, 4, 2))
-  sec=strtonum(substr(str, 7, 2))
-  return hour*3600+min*60+sec
-}
-function timestr(time) {
-  return strftime("%H:%M:%S", time - 3600)
-}
-function timestamp(day_and_time,     b) {
-  if (match(day_and_time, /.*, (.*)/, b)) {
-    return strptime(b[1])
-  }
 }
