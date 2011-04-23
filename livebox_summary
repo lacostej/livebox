@@ -2,9 +2,10 @@
 #
 # list livebox deconnections date time
 #
-dir=`dirname $0`
+file=`readlink -f $0`
+dir=`dirname $file`
 usage() {
-  name=`basename "$0"`
+  name=`basename "$file"`
   cat << EOF
 usage: $name [-o] [filename]
 
