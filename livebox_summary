@@ -46,6 +46,7 @@ if [ $# -eq 1 ]; then
     exit 1
   fi
 fi
+export AWKPATH=$dir:$AWKPATH
 if [ -z $DEBUG ]; then
   igawk -f $dir/summary.awk $*
 else
