@@ -2,7 +2,7 @@
 #
 # Script to extract status information from a livebox routeur and format it in a single line
 #
-# Line format: TIMESTAMP;MAIN1;MAIN2;MAIN3;....;MAIN12;ADSL1;ADSL2;ADSL3;ADSL4
+# Line format: TIMESTAMP;MAIN1;MAIN2;MAIN3;....;MAIN12;ADSL1;ADSL2;ADSL3;ADSL4;HEC;CRC
 #
 # IDX, PAGE, description
 #
@@ -24,6 +24,9 @@
 # 15, ADSL: "Dernière connexion PPP"
 # 16, ADSL: "Durée de connexion PPP"
 # 17, ADSL: "Date de dernière déconnexion PPP"
+#
+# 18, HEC: "HEC errors counter"
+# 19, HEC: "CRC errors counter"
 
 
 # default values
@@ -32,9 +35,12 @@ SLEEP=10
 LOOPS=1
 PASSWORD=admin
 
+file=`readlink -f $0`
+dir=`dirname $file`
+
 usage()
 {
-  name=`basename "$0"`
+  name=`basename "$file"`
   cat << EOF
 usage: $name [options]
 
@@ -81,7 +87,7 @@ done
 
 if [ $# -ge $OPTIND ]; then
   shift $((OPTIND-1))
-  echo "Unecessary remaining arguments: $*"
+  echo "Unnecessary remaining arguments: $*"
   usage
   exit 1
 fi
@@ -94,6 +100,29 @@ cell_extract() {
   local file="$2"
   cell=`grep -A 1 "$exp" $file | tail -1 | sed 's/.*>\(.*\)<.*/\1/'`
   cell=$(trim "$cell")
+}
+
+delete_if_exists() {
+  if [ -f $1 ]; then
+    rm $1
+  fi
+}
+
+telnet_dump() {
+  local log_dump=`mktemp /tmp/livebox_telnet.XXXXXXXX`
+  if [ "$?" -ne "0" ]; then
+    echo "mktemp failed"
+    exit 1
+  fi
+  #echo $log_dump
+  $dir/livebox_telnet_dump 2>&1 | tr '\r' ' ' > $log_dump
+  res=${PIPESTATUS[0]}
+  hec=`grep "HEC counter" $log_dump | cut -d ':' -f 2`
+  crc=`grep "CRC counter" $log_dump | cut -d ':' -f 2`
+  
+  delete_if_exists $log_dump
+  echo "$hec $crc"
+  return $res
 }
 
 display_statuses() {
@@ -120,20 +149,20 @@ display_statuses() {
   cell_extract "Nombre de paquets envoyés" $log && car10=$cell
   cell_extract "Nombre de paquets perdus" $log && car11=$cell
   cell_extract "Adresse IP WAN" $log && car12=$cell
-  if [ -f $log_main ]; then
-    rm $log_main
-  fi
+  delete_if_exists $log_main
+
   log=$log_adsl
   cell_extract "Durée de synchronisation ADSL" $log && adsl1=$cell
   cell_extract "Dernière connexion PPP" $log && adsl2=$cell
   cell_extract "Durée de connexion PPP" $log && adsl3=$cell
   cell_extract "Date de dernière déconnexion PPP" $log && adsl4=$cell
-  if [ -f $log_adsl ]; then
-    rm $log_adsl
-  fi
+  delete_if_exists $log_adsl
+  
+  local -a errors=( `telnet_dump` )
+  #echo "${errors[@]}"
 
   local now=`date +%Y%m%d-%H%M%S`
-  echo "$now;$car1;$car2;$car3;$car4;$car5;$car6;$car7;$car8;$car9;$car10;$car11;$car12;$adsl1;$adsl2;$adsl3;$adsl4"
+  echo "$now;$car1;$car2;$car3;$car4;$car5;$car6;$car7;$car8;$car9;$car10;$car11;$car12;$adsl1;$adsl2;$adsl3;$adsl4;${errors[0]};${errors[1]}"
 }
 
 

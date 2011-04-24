@@ -10,7 +10,7 @@ BEGIN{
 }
 { 
   n=split($0,A,";")
-  if (n == 17) {
+  if (n >= 17) {
     # connection information isn t always present
     newIpStr=""
     if (match(A[6], /(.*) kb\/s/, b)) { newBwUpStr=b[1] }
