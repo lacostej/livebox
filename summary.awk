@@ -9,17 +9,17 @@ BEGIN{
   lastDisconnectTimestamp = 0; lastDisconnectStr=""; lastIpStr=""; lastBwUpStr=""; lastBwDownStr=""
 }
 { 
-  if (match($0, /(.*);(.*);(.*);(.*)/, a)) {
+  n=split($0,A,";")
+  if (n == 17) {
     # connection information isn t always present
     newIpStr=""
-    if (match(a[1], /.*;(.*) kb\/s;(.*) kb\/s;.*;(\w+\.\w+\.\w+\.\w+);.*/, b)) {
-      newBwUpStr=b[1]
-      newBwDownStr=b[2]
-      newIpStr=b[3]
-    }
-    newConnectStr=a[2]
-    newDurationStr=a[3]
-    newDisconnectStr = a[4]
+    if (match(A[6], /(.*) kb\/s/, b)) { newBwUpStr=b[1] }
+    if (match(A[7], /(.*) kb\/s/, b)) { newBwDownStr=b[1] }
+    if (match(A[13], /(\w+\.\w+\.\w+\.\w+)/, b)) { newIpStr=b[3] }
+
+    newConnectStr=A[15]
+    newDurationStr=A[16]
+    newDisconnectStr=A[17]
     
     if (newDisconnectStr != "") {
       newDisconnectTimestamp = strptime(newDisconnectStr)
