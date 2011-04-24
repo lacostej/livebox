@@ -1,13 +1,15 @@
 #!/bin/bash
 #
-# Script to extract status information from a livebox routeur and format it in a single line
+# Script to extract status information from a livebox routeur and format it in a single line, separated by semicolons
 #
-# Line format: TIMESTAMP;MAIN1;MAIN2;MAIN3;....;MAIN12;ADSL1;ADSL2;ADSL3;ADSL4;HEC;CRC
+# Sample: 
 #
-# IDX, PAGE, description
+# 20110424-114802;25.5 dB;46.7 dB;20 dB;11 dB;640 kb/s;3840 kb/s;0;0;9;8;0;83.200.176.162;00:00:54;mardi 31 mars, 01:01:18;00:00:02;mardi 31 mars, 01:00:04;8;2;G992_1_A
+#
+# IDX, SOURCE, description
 #
 # 1, TIMESTAMP: 20110419-093701
-# 2, MAIN1: "Atténuation montante"
+# 2, MAIN: "Atténuation montante"
 # 3, MAIN: "Atténuation descendante"
 # 4, MAIN: "Marge au bruit sens montant"
 # 5, MAIN: "Marge au bruit descendante"
@@ -25,8 +27,14 @@
 # 16, ADSL: "Durée de connexion PPP"
 # 17, ADSL: "Date de dernière déconnexion PPP"
 #
-# 18, HEC: "HEC errors counter"
-# 19, HEC: "CRC errors counter"
+# 18, ADSL_MON: "HEC errors counter"
+# 19, ADSL_MON: "CRC errors counter"
+# 20, ADSL_MON: adslMode
+#
+# SOURCES:
+# MAIN: $HOST/index.cgi?page=infosys_main&sessionid=...
+# ADSL: $HOST/index.cgi?page=infosys_adsl&sessionid=...
+# ADSL_MON: telnet $HOST adsl mon. See livebox_telnet_dump script
 
 
 # default values
