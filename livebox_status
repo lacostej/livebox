@@ -41,6 +41,7 @@
 HOST=192.168.1.1
 SLEEP=10
 LOOPS=1
+USE_TELNET=0
 PASSWORD=admin
 
 file=`readlink -f $0`
@@ -56,6 +57,7 @@ This script displays the adsl statuses for the livebox in a single line
 
 OPTIONS:
    -h      Show this message
+   -t      Also log telnet information (HEC/CRC errors, adsl mode). Not the default.
    -u      Box url. Defaults to $HOST
    -n      Number of times to display the statuses. Defaults to $LOOPS
    -p      Admin password. Defaults to PASSWORD
@@ -64,7 +66,7 @@ EOF
 
 }
 
-while getopts “hu:n:s:p:” OPTION
+while getopts “hu:n:s:p:t” OPTION
 do
      case $OPTION in
          h)
@@ -80,6 +82,9 @@ do
          s)
              SLEEP=$OPTARG
              ;;
+         t)
+             USE_TELNET=1
+             ;;
          p)
              PASSWORD=$OPTARG
              ;;
@@ -88,7 +93,6 @@ do
              exit
              ;;
      esac
-#     shift $((OPTIND-1));
 done
 
 #echo "args $OPTIND $# $*"
@@ -167,7 +171,9 @@ display_statuses() {
   cell_extract "Date de dernière déconnexion PPP" $log && adsl4=$cell
   delete_if_exists $log_adsl
   
-  local -a errors=( `telnet_dump` )
+  if [ $USE_TELNET -ne 0 ]; then
+    local -a errors=( `telnet_dump` )
+  fi
   #echo "${errors[@]}"
 
   local now=`date +%Y%m%d-%H%M%S`
