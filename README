@@ -32,3 +32,10 @@ then use gnuplot to generate a graph. Example: bandwidth and noise margin agains
  * * * * * /cygdrive/c/My\ Documents\livebox\livebox_status -n 3 -s 15 >> /cygdrive/c/My\ Documents\livebox\livebox_statuses.txt 2>&1
 
 * Parsing the output. See livebox_summary and doc/analysis.txt
+
+
+* Testing. We use xunit from art of awk. See Makefile for more information
+
+  make
+  
+      1 PASS

@@ -15,7 +15,7 @@ BEGIN{
     newIpStr=""
     if (match(A[6], /(.*) kb\/s/, b)) { newBwUpStr=b[1] }
     if (match(A[7], /(.*) kb\/s/, b)) { newBwDownStr=b[1] }
-    if (match(A[13], /(\w+\.\w+\.\w+\.\w+)/, b)) { newIpStr=b[3] }
+    if (match(A[13], /(\w+\.\w+\.\w+\.\w+)/, b)) { newIpStr=b[1] }
 
     newConnectStr=A[15]
     newDurationStr=A[16]
@@ -31,7 +31,7 @@ BEGIN{
         lastBwUpStr = newBwUpStr
         lastBwDownStr = newBwDownStr
       }
-      #print lastDurationStr " " newDurationStr " " newDisconnectStr " " newDisconnectTimestamp " " lastDisconnectTimestamp
+      #print newIpStr " " lastDurationStr " " newDurationStr " " lastConnectStr " " newDisconnectStr " " newDisconnectTimestamp " " lastDisconnectTimestamp
       # detect disconnect, we have a new start timestamp
       # start time is precise up to one second
       if (newDisconnectTimestamp - lastDisconnectTimestamp > 1) {
