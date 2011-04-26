@@ -1,0 +1,27 @@
+spawn telnet 192.168.1.1
+Trying 192.168.1.1...
+Connected to 192.168.1.1.
+Escape character is '^]'.
+login: root
+Password: ****
+[root @ home]$ adsl
+[root @ adsl]$ mon
+  Checksum L1 code: 0x0a1c0a1c
+ ADSL Monitoring is Successful.
+ The values are: 
+
+  adslLineStatus : OPERATIONAL
+  adslMode  : G992_1_A
+  Upstream = 640 Kb ( Intlv[LP0] )
+  Downstream = 4192 Kb ( Intlv[LP0] )
+=================================================
+  DIAG Info            :
+=================================================
+  Attenuation ( dB )   :   47.0    26.0 (FE)
+  SNR margin  ( dB )   :    11     16 (FE)
+  HEC counter          :      742
+  CRC counter          :       66
+
+  RTFirmwareVer  : 0x0a1c0a1c
+
+[root @ adsl]$ 
