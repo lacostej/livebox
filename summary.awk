@@ -33,8 +33,8 @@ BEGIN{
       }
       #print newIpStr " " lastDurationStr " " newDurationStr " " lastConnectStr " " newDisconnectStr " " newDisconnectTimestamp " " lastDisconnectTimestamp
       # detect disconnect, we have a new start timestamp
-      # start time is precise up to one second
-      if (newDisconnectTimestamp - lastDisconnectTimestamp > 1) {
+      # start time is precise up to 2 seconds. See test case #7
+      if (newDisconnectTimestamp - lastDisconnectTimestamp > 2) {
         from=lastConnectStr
         to=newDisconnectStr
 

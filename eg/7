@@ -1,0 +1,10 @@
+# This test case contains an abnormal date computation from the ADSL page
+# the last connection time starts at lundi 25 avril, 17:46:06, then goes to 17:46:07 and 17:46:08
+# note that the disconnection time also exhibits strange values, with lundi 25 avril, 17:44:47
+#
+# we should really identify all this dump as a single connection
+file=`readlink -f $0`
+name=`basename $0`
+pwd=`dirname $file`
+dir=..
+$dir/livebox_summary $pwd/livebox_statuses_$name.txt
