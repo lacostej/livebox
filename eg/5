@@ -1,5 +1,6 @@
 # make sure an error in obtaining status data for adsl doesn't result in detecting a disconnection
 file=`readlink -f $0`
+name=`basename $0`
 pwd=`dirname $file`
 dir=..
-$dir/livebox_summary $pwd/livebox_statuses_5.txt
+$dir/livebox_summary $pwd/livebox_statuses_$name.txt

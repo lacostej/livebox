@@ -1,5 +1,6 @@
 # test that missing argument to t option fails script
 file=`readlink -f $0`
+name=`basename $0`
 pwd=`dirname $file`
 dir=..
 $dir/livebox_status -t off > /dev/null && echo "OK"

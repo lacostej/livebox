@@ -1,4 +1,6 @@
+# OK data - no disconnections
 file=`readlink -f $0`
+name=`basename $0`
 pwd=`dirname $file`
 dir=..
-$dir/livebox_summary $pwd/livebox_statuses_1.txt
+$dir/livebox_summary $pwd/livebox_statuses_$name.txt
