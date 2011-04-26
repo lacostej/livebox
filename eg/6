@@ -1,0 +1,9 @@
+# This test case contains a typical disconnection which exhibits
+# * the status aren't retrieved properly a few times (;;;;;;;;)
+# * the first new status show that ADSL sync is OK but the lines still contain garbage data (mardi 31 mars...)
+# * then the connection succeeds, the PPP connection duration is positive and the IP address changes 
+file=`readlink -f $0`
+name=`basename $0`
+pwd=`dirname $file`
+dir=..
+$dir/livebox_summary $pwd/livebox_statuses_$name.txt
