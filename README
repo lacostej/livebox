@@ -1,4 +1,6 @@
-Scripts to extract information from a livebox 2 web interface.
+Scripts to extract information from a livebox 2 web and telnet interfaces. The scripts should be able to run on Linux and Windows (thanks to Cygwin)
+
+One script is used to dump data on a single line, another to summarize relevant information.
 
 Usages:
 
@@ -8,13 +10,15 @@ Usages:
 
 20110419-204454;26.0 dB;47.3 dB;18 dB;10 dB;640 kb/s;3360 kb/s;0;0;301;1991;0;81.49.42.174;00:05:44;mardi 19 avril, 19:41:37;00:03:20;mardi 19 avril, 19:39:14;104;10;G992_1_A
 
-See livebox_status script for format description.
+See livebox_status script for format description and options.
 
 * Crontab: log 4 times per minute the statuses
 
 * * * * * livebox_status -n 4 -s 15 >> ~/livebox_statuses.txt
 
-then use gnuplot to generate a graph. Example: bandwidth and noise margin against time.
+then use e.g. gnuplot to generate a graph. Two example gnuplot templates are provided
+* bandwidth and noise margin against time.
+* nb packets and errors against time.
 
 * Windows installation
 
@@ -24,8 +28,14 @@ then use gnuplot to generate a graph. Example: bandwidth and noise margin agains
  * git [optional] if you want to fetch the latest version of this program
  * cron [optional] if you want to let the program run automatically
  * runsrv [optional] if you want to use cron
+ * telnet [optional] if you want to dump telnet data
+ * expect [optional] if you want to dump telnet data
  
- then follow http://www.davidjnice.com/articles/cygwin_cron-service.html if you want to install cron
+  then follow http://www.davidjnice.com/articles/cygwin_cron-service.html if you want to install cron. In particular do
+ 
+    cygrunsrv --install cron --path /usr/sbin/cron --args -n
+   
+  in a cygwin shell
  
  (crontab -e under Windows will look like
  
