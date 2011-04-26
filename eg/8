@@ -1,0 +1,18 @@
+# This test case contains a line with abnormal status information
+# 20110423-121028;26.0 dB;47.0 dB;16 dB;10 dB;640 kb/s;4192 kb/s;0;0;9;8;0;83.203.36.234;00:00:52;mardi 31 mars, 01:01:16;00:00:03;mardi 31 mars, 01:00:03
+# 
+# it's a bit hard to say what is wrong in that line, appart from the last connect/disconnect times, almost everything looks correct.
+#
+# to find those scenarios in your files:
+#
+# grep "mardi 31" livebox_statuses.txt  | grep "[0-9]*\.[0-9]*\."
+#
+# in my case, all had a PPP connection under or equal to 10 seconds.
+#
+# we can then assume that some data is incorrectly initialised somewhere, but looks ok after n seconds (n > 10)
+# 
+file=`readlink -f $0`
+name=`basename $0`
+pwd=`dirname $file`
+dir=..
+$dir/livebox_summary $pwd/livebox_statuses_$name.txt

@@ -31,3 +31,10 @@ function strptime(str,     year,        b, day, month, time, hour, min, sec, str
   }
 }
 
+# "09:14:36" => nb of seconds since start
+function strptime2(str,            b, day, month, time, hour, min, sec, str2) {
+  return strptime("xxx 1 janvier, " newDurationStr) + 3600
+}
+
+
+
