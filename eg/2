@@ -2,5 +2,6 @@
 file=`readlink -f $0`
 pwd=`dirname $file`
 dir=..
+. $pwd/env
 $dir/livebox_status -t 2>&1 | head -2
 
