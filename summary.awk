@@ -23,12 +23,17 @@ BEGIN{
     
     if (newDisconnectStr != "") {
       newDisconnectTimestamp = strptime(newDisconnectStr)
+      newConnectTimestamp = strptime(newConnectStr)
       newDurationTimestamp = length(newDurationStr) > 0 ? strptime2(newDurationStr) : 0
       if (newDurationTimestamp < 15 && newIpStr != "") {
         next
       }
       
 
+      #print newDisconnectTimestamp " " lastDisconnectTimestamp " " lastConnectStr " " lastDisconnectStr
+      if (newDisconnectTimestamp - lastDisconnectTimestamp > 2) {
+        lastConnectStr = lastDisconnectStr
+      }
       if (lastDisconnectStr=="" && newIpStr!="") {
         lastDisconnectStr = newDisconnectStr
         lastDisconnectTimestamp = newDisconnectTimestamp
@@ -36,7 +41,7 @@ BEGIN{
         lastBwUpStr = newBwUpStr
         lastBwDownStr = newBwDownStr
       }
-      #print newIpStr " " lastDurationStr " " newDurationStr " " lastConnectStr " " newDisconnectStr " " newDisconnectTimestamp " " lastDisconnectTimestamp " " newDurationTimestamp
+      #print newIpStr " " lastDurationStr " " newDurationStr " " lastConnectStr " " newDisconnectStr " " newDisconnectTimestamp " " newConnectTimestamp " " lastDisconnectTimestamp " " newDurationTimestamp
       # detect disconnect, we have a new start timestamp
       # start time is precise up to 2 seconds. See test case #7
       if (newDisconnectTimestamp - lastDisconnectTimestamp > 2) {

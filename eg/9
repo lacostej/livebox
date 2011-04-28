@@ -1,0 +1,9 @@
+# This test case contains a typical disconnection follower by multiple reconnection attemps.
+# We make sure we identify the fact that the failed reconnection attempts have no IP and correct start time.
+# and the successfull but short lived reconnection attemps have proper information.
+# 
+file=`readlink -f $0`
+name=`basename $0`
+pwd=`dirname $file`
+dir=..
+$dir/livebox_summary $pwd/livebox_statuses_$name.txt
