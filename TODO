@@ -1,4 +1,2 @@
 * fix a few bugs in summary.awk, including
 ** ignore invalid rows (e.g. with erroneous information)
-** lack IP in summary
-

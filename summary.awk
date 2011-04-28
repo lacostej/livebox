@@ -28,7 +28,6 @@ BEGIN{
       if (newDurationTimestamp < 15 && newIpStr != "") {
         next
       }
-      
 
       #print newDisconnectTimestamp " " lastDisconnectTimestamp " " lastConnectStr " " lastDisconnectStr
       if (newDisconnectTimestamp - lastDisconnectTimestamp > 2) {
@@ -57,6 +56,8 @@ BEGIN{
         lastBwUpStr = newBwUpStr
         lastBwDownStr = newBwDownStr
       }
+      if (newIpStr != "")
+        lastIpStr = newIpStr
     }
     if (length(newDurationStr) > 0) {
       lastDurationStr=newDurationStr
