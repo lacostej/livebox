@@ -6,4 +6,4 @@ file=`readlink -f $0`
 name=`basename $0`
 pwd=`dirname $file`
 dir=..
-$dir/livebox_summary $pwd/livebox_statuses_$name.txt
+$dir/livebox_summary $pwd/${name}_livebox_statuses.txt
