@@ -1,4 +1,4 @@
-# This test case contains a typical disconnection follower by multiple reconnection attemps.
+# This test case contains a typical disconnection followed by multiple reconnection attempts.
 # We make sure we identify the fact that the failed reconnection attempts have no IP and correct start time.
 # and the successfull but short lived reconnection attemps have proper information.
 # 
