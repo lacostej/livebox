@@ -1,4 +1,4 @@
-# test that missing argument to t option fails script
+# test that disabling telnet works. Requires connection to livebox
 file=`readlink -f $0`
 name=`basename $0`
 pwd=`dirname $file`
