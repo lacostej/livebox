@@ -145,41 +145,44 @@ telnet_dump() {
 
 display_statuses() {
   local box_url=$HOST
-  local sessionid=`curl -s -d "authlogin=admin&authpasswd=$PASSWORD&authaction=login" $box_url | grep 'voip&sessionid=' | sed 's/.*id=\([^\"]*\).*/\1/'`
+  timeout=2
+  local sessionid=`curl --connect-timeout $timeout -s -d "authlogin=admin&authpasswd=$PASSWORD&authaction=login" $box_url | grep 'voip&sessionid=' | sed 's/.*id=\([^\"]*\).*/\1/'`
   local infosys_main="$box_url/index.cgi?page=infosys_main&sessionid=$sessionid"
   local infosys_adsl="$box_url/index.cgi?page=infosys_adsl&sessionid=$sessionid"
 
   local log_main=`mktemp /tmp/livebox.XXXXXXXX`
   local log_adsl=`mktemp /tmp/livebox.XXXXXXXX`
-  curl --silent $infosys_main -o $log_main
-  curl --silent $infosys_adsl -o $log_adsl
+  if [[ ! -z "$sessionid" ]]; then
+    curl --connect-timeout $timeout --silent $infosys_main -o $log_main
+    curl --connect-timeout $timeout --silent $infosys_adsl -o $log_adsl
+ 
+    local log=$log_main
+    cell_extract "Atténuation montante" $log && car1=$cell
+    cell_extract "Atténuation descendante" $log && car2=$cell
+    cell_extract "Marge au bruit sens montant" $log && car3=$cell
+    cell_extract "Marge au bruit descendante" $log && car4=$cell
+    cell_extract "Débit montant maximum" $log && car5=$cell
+    cell_extract "Débit descendant maximum" $log && car6=$cell
+    cell_extract "Puissance dans le sens montant" $log && car7=$cell
+    cell_extract "Puissance dans le sens descendant" $log && car8=$cell
+    cell_extract "Nombre de paquets reçus" $log && car9=$cell
+    cell_extract "Nombre de paquets envoyés" $log && car10=$cell
+    cell_extract "Nombre de paquets perdus" $log && car11=$cell
+    cell_extract "Adresse IP WAN" $log && car12=$cell
+    delete_if_exists $log_main
 
-  local log=$log_main
-  cell_extract "Atténuation montante" $log && car1=$cell
-  cell_extract "Atténuation descendante" $log && car2=$cell
-  cell_extract "Marge au bruit sens montant" $log && car3=$cell
-  cell_extract "Marge au bruit descendante" $log && car4=$cell
-  cell_extract "Débit montant maximum" $log && car5=$cell
-  cell_extract "Débit descendant maximum" $log && car6=$cell
-  cell_extract "Puissance dans le sens montant" $log && car7=$cell
-  cell_extract "Puissance dans le sens descendant" $log && car8=$cell
-  cell_extract "Nombre de paquets reçus" $log && car9=$cell
-  cell_extract "Nombre de paquets envoyés" $log && car10=$cell
-  cell_extract "Nombre de paquets perdus" $log && car11=$cell
-  cell_extract "Adresse IP WAN" $log && car12=$cell
-  delete_if_exists $log_main
-
-  log=$log_adsl
-  cell_extract "Durée de synchronisation ADSL" $log && adsl1=$cell
-  cell_extract "Dernière connexion PPP" $log && adsl2=$cell
-  cell_extract "Durée de connexion PPP" $log && adsl3=$cell
-  cell_extract "Date de dernière déconnexion PPP" $log && adsl4=$cell
-  delete_if_exists $log_adsl
+    log=$log_adsl
+    cell_extract "Durée de synchronisation ADSL" $log && adsl1=$cell
+    cell_extract "Dernière connexion PPP" $log && adsl2=$cell
+    cell_extract "Durée de connexion PPP" $log && adsl3=$cell
+    cell_extract "Date de dernière déconnexion PPP" $log && adsl4=$cell
+    delete_if_exists $log_adsl
   
-  if [ "$USE_TELNET" == "on" ]; then
-    local -a errors=( `telnet_dump` )
+    if [ "$USE_TELNET" == "on" ]; then
+      local -a errors=( `telnet_dump` )
+    fi
+    #echo "${errors[@]}"
   fi
-  #echo "${errors[@]}"
 
   local now=`date +%Y%m%d-%H%M%S`
   echo "$now;$car1;$car2;$car3;$car4;$car5;$car6;$car7;$car8;$car9;$car10;$car11;$car12;$adsl1;$adsl2;$adsl3;$adsl4;${errors[0]};${errors[1]};${errors[2]}"
