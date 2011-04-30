@@ -2,11 +2,12 @@
 HOST=192.168.1.1
 USER=root
 PASSWORD=1234
+TIMEOUT=3
 
 type -P expect &>/dev/null || { echo "I require expect but it's not installed. Aborting." >&2; exit 1; }
 
 expect << EOF
-set timeout 20
+set timeout $TIMEOUT
 spawn telnet $HOST
 expect "login: "
 send "$USER\n"
